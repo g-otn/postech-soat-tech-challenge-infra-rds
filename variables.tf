@@ -35,3 +35,11 @@ variable "aws_access_key" {
 variable "aws_secret_key" {
   description = "AWS Secret Key"
 }
+
+variable "vpc_id" {
+  description = "VPC id"
+}
+
+variable "subnet_ids" {
+  description = "Subnet id array"
+}

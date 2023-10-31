@@ -1,20 +1,6 @@
-data "aws_availability_zones" "available" {}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.77.0"
-
-  name                 = "soat_vpc"
-  cidr                 = "10.0.0.0/16"
-  azs                  = data.aws_availability_zones.available.names
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-}
-
-resource "aws_security_group" "soat_security_group" {
-  name   = "soat_security_group"
-  vpc_id = module.vpc.vpc_id
+resource "aws_security_group" "soat_rds_security_group" {
+  name   = "soat-rds-security-group"
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = var.db_port
@@ -23,22 +9,15 @@ resource "aws_security_group" "soat_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "soat_security_group"
-  }
 }
 
-resource "aws_db_subnet_group" "soat_subnet_group" {
-  name       = "soat_subnet_group"
-  subnet_ids = module.vpc.public_subnets
-
-  tags = {
-    Name = "soat_subnet_group"
-  }
+resource "aws_db_subnet_group" "soat_rds_subnet_group" {
+  name       = "soat-rds-subnet-group"
+  subnet_ids = var.subnet_ids
 }
 
-resource "aws_db_parameter_group" "soat_group" {
-  name   = "soat-group"
+resource "aws_db_parameter_group" "soat_rds_parameter_group" {
+  name   = "soat-rds-parameter-group"
   family = "postgres15"
 
   parameter {
@@ -47,9 +26,9 @@ resource "aws_db_parameter_group" "soat_group" {
   }
 }
 
-resource "aws_db_instance" "soat_postgres_db" {
+resource "aws_db_instance" "soat_rds_postgres_db" {
 
-  identifier           = "soat-postgres-db"
+  identifier           = "soat-rds-postgres-db"
   engine               = "postgres"
 
   allocated_storage    = 20
@@ -65,7 +44,8 @@ resource "aws_db_instance" "soat_postgres_db" {
   publicly_accessible  = true
   deletion_protection  = false
 
-  parameter_group_name   = aws_db_parameter_group.soat_group.name
-  vpc_security_group_ids = [aws_security_group.soat_security_group.id]
-  db_subnet_group_name   = aws_db_subnet_group.soat_subnet_group.name
+  parameter_group_name   = aws_db_parameter_group.soat_rds_parameter_group.name
+  db_subnet_group_name   = aws_db_subnet_group.soat_rds_subnet_group.name
+
+  vpc_security_group_ids = [aws_security_group.soat_rds_security_group.id]
 }

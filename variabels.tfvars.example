@@ -1,0 +1,8 @@
+aws_access_key = ""
+aws_secret_key = ""
+
+vpc_id = ""
+subnet_ids = [
+    "", // soat-tech-challenge-subnet-public1-us-east-2a
+    "" // soat-tech-challenge-subnet-public2-us-east-2b
+]
