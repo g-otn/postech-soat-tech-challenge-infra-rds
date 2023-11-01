@@ -26,10 +26,16 @@ jobs:
   terraform_check:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
     steps:
       - uses: actions/checkout@v3
 
       - uses: hashicorp/setup-terraform@v2
+
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
@@ -44,5 +50,8 @@ jobs:
         run: terraform validate
 
       - uses: shmokmt/actions-setup-tfcmt@v2
-      - name: Run tfcmt with Terraform Plan
-        run: tfcmt plan -- terraform plan
+
+      - name: Terraform Plan with tfcmt
+        run: tfcmt plan -patch -- terraform plan -input=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
