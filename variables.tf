@@ -1,9 +1,3 @@
-variable "db_instance_name" {
-  description = "Nome da instância RDS"
-  type        = string
-  default     = "soat_postgres_db"
-}
-
 variable "db_port" {
   description = "Porta da instância RDS"
   type        = string
@@ -30,16 +24,20 @@ variable "aws_region" {
 
 variable "aws_access_key" {
   description = "AWS Access Key"
+  type        = string
 }
 
 variable "aws_secret_key" {
   description = "AWS Secret Key"
+  type        = string
 }
 
 variable "vpc_id" {
   description = "VPC id"
+  type        = string
 }
 
 variable "subnet_ids" {
   description = "Subnet id array"
+  type        = set(string)
 }

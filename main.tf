@@ -28,24 +28,24 @@ resource "aws_db_parameter_group" "soat_rds_parameter_group" {
 
 resource "aws_db_instance" "soat_rds_postgres_db" {
 
-  identifier           = "soat-rds-postgres-db"
-  engine               = "postgres"
+  identifier = "soat-rds-postgres-db"
+  engine     = "postgres"
 
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine_version       = "15.3"
-  instance_class       = "db.t3.micro"
+  allocated_storage = 20
+  storage_type      = "gp2"
+  engine_version    = "15.3"
+  instance_class    = "db.t3.micro"
 
-  username             = var.db_username
-  password             = var.db_password
-  port                 = var.db_port
+  username = var.db_username
+  password = var.db_password
+  port     = var.db_port
 
-  skip_final_snapshot  = true
-  publicly_accessible  = true
-  deletion_protection  = false
+  skip_final_snapshot = true
+  publicly_accessible = true
+  deletion_protection = false
 
-  parameter_group_name   = aws_db_parameter_group.soat_rds_parameter_group.name
-  db_subnet_group_name   = aws_db_subnet_group.soat_rds_subnet_group.name
+  parameter_group_name = aws_db_parameter_group.soat_rds_parameter_group.name
+  db_subnet_group_name = aws_db_subnet_group.soat_rds_subnet_group.name
 
   vpc_security_group_ids = [aws_security_group.soat_rds_security_group.id]
 }
