@@ -8,7 +8,6 @@ resource "aws_security_group" "soat_rds_security_group" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
 }
 
 resource "aws_db_subnet_group" "soat_rds_subnet_group" {
@@ -27,7 +26,6 @@ resource "aws_db_parameter_group" "soat_rds_parameter_group" {
 }
 
 resource "aws_db_instance" "soat_rds_postgres_db" {
-
   identifier = "soat-rds-postgres-db"
   engine     = "postgres"
 
@@ -41,7 +39,7 @@ resource "aws_db_instance" "soat_rds_postgres_db" {
   port     = var.db_port
 
   skip_final_snapshot = true
-  publicly_accessible = true
+  publicly_accessible = false
   deletion_protection = false
 
   parameter_group_name = aws_db_parameter_group.soat_rds_parameter_group.name

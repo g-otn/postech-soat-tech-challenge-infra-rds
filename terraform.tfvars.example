@@ -1,0 +1,9 @@
+// For local development
+AWS_ACCESS_KEY = ""
+AWS_SECRET_KEY = ""
+
+vpc_id = ""
+subnet_ids = [
+  "", // soat-tech-challenge-subnet-public1-us-east-2a
+  ""  // soat-tech-challenge-subnet-public2-us-east-2b
+]

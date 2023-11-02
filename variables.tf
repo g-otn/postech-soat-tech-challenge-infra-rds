@@ -1,3 +1,13 @@
+variable "repo_owner" {
+  type    = string
+  default = "soat-tech-challenge"
+}
+
+variable "repository" {
+  type    = string
+  default = "soat-tech-challenge/terraform-aws-rds"
+}
+
 variable "db_port" {
   description = "Porta da instância RDS"
   type        = string
@@ -22,12 +32,12 @@ variable "aws_region" {
   default     = "us-east-2"
 }
 
-variable "aws_access_key" {
+variable "AWS_ACCESS_KEY" {
   description = "AWS Access Key"
   type        = string
 }
 
-variable "aws_secret_key" {
+variable "AWS_SECRET_KEY" {
   description = "AWS Secret Key"
   type        = string
 }
@@ -40,4 +50,5 @@ variable "vpc_id" {
 variable "subnet_ids" {
   description = "Subnet id array"
   type        = set(string)
+  default     = ["value"]
 }
