@@ -1,6 +1,6 @@
 resource "aws_security_group" "soat_rds_security_group" {
   name   = "soat-rds-security-group"
-  vpc_id = var.vpc_id
+  vpc_id = data.aws_vpc.vpc.id
 
   ingress {
     from_port   = var.db_port

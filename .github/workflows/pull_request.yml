@@ -73,3 +73,5 @@ jobs:
         run: tfcmt plan -patch -- terraform plan -input=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_AWS_READONLY_ACCESSKEY }}
+          TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_AWS_READONLY_SECRETKEY }}

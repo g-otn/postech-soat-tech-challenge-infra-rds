@@ -42,9 +42,10 @@ variable "AWS_SECRET_KEY" {
   type        = string
 }
 
-variable "vpc_id" {
-  description = "VPC id"
+variable "vpc_name" {
+  description = "VPC name"
   type        = string
+  default     = "soat-tech-challenge-vpc"
 }
 
 variable "subnet_ids" {
