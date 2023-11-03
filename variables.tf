@@ -8,12 +8,6 @@ variable "repository" {
   default = "soat-tech-challenge/terraform-aws-rds"
 }
 
-variable "prefix" {
-  description = "Common prefix used in resource names"
-  type        = string
-  default     = "soat-tc"
-}
-
 variable "db_port" {
   description = "Porta da instância RDS"
   type        = string
