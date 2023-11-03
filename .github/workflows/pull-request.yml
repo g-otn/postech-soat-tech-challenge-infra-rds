@@ -1,0 +1,75 @@
+name: Pull Request
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+
+      - name: Init TFLint
+        run: tflint --init
+        env:
+          # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run TFLint
+        run: tflint -f compact
+
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
+        with:
+          tfsec_args: --soft-fail
+          github_token: ${{ github.token }}
+
+  terraform_check:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Setup tfctm
+        uses: shmokmt/actions-setup-tfcmt@v2
+
+      - name: Terraform Plan
+        run: tfcmt plan -patch -- terraform plan -input=false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_AWS_READONLY_ACCESSKEY }}
+          TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_AWS_READONLY_SECRETKEY }}
