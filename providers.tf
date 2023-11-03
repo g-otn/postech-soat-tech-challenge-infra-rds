@@ -1,12 +1,13 @@
 provider "aws" {
-  region     = var.aws_region
+  region = var.aws_region
+
   access_key = var.AWS_ACCESS_KEY
   secret_key = var.AWS_SECRET_KEY
 
   default_tags {
     tags = {
-      Project    = var.repo_owner
-      Repository = var.repository
+      Organization = var.repo_owner
+      Repository   = var.repository
     }
   }
 }
