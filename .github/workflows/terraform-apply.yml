@@ -37,7 +37,7 @@ jobs:
           TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_AWS_READONLY_SECRETKEY }}
 
       - name: Terraform Apply
-        run: tfcmt apply -- terraform plan -input=false -auto-approve
+        run: tfcmt apply -- terraform apply -input=false -auto-approve
         env:
           GITHUB_TOKEN: ${{ github.token }}
           TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_VAR_AWS_ACCESS_KEY }}
