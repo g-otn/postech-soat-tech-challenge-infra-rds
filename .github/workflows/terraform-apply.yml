@@ -15,9 +15,11 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - uses: hashicorp/setup-terraform@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         id: init
@@ -30,7 +32,7 @@ jobs:
       - uses: shmokmt/actions-setup-tfcmt@v2
 
       - name: Terraform Plan
-        run: tfcmt plan -- terraform plan -input=false
+        run: tfcmt plan -patch -- terraform plan -input=false
         env:
           GITHUB_TOKEN: ${{ github.token }}
           TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_AWS_READONLY_ACCESSKEY }}
