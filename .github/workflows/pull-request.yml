@@ -2,6 +2,10 @@ name: Pull Request
 
 on:
   pull_request:
+    branches:
+      - main
+    paths:
+      - "**.tf"
   workflow_dispatch:
 
 jobs:
@@ -43,33 +47,92 @@ jobs:
           tfsec_args: --soft-fail
           github_token: ${{ github.token }}
 
-  terraform_check:
-    name: Terraform Plan
+  terraform-cloud-speculative-run:
+    name: Terraform Cloud Speculative Run
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       pull-requests: write
 
+    env:
+      TF_CLOUD_ORGANIZATION: ${{ vars.TF_CLOUD_ORGANIZATION }}
+      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
+      CONFIG_DIRECTORY: ${{ vars.CONFIG_DIRECTORY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+      - name: Upload Configuration
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.4
+        id: upload
+        with:
+          workspace: ${{ env.TF_WORKSPACE }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
+          speculative: true
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Create Plan Run
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.4
+        id: run
+        ## run may fail, if so continue to output PR comment
+        ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
+        continue-on-error: true
+        with:
+          workspace: ${{ env.TF_WORKSPACE }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+          plan_only: true
 
-      - name: Terraform Validate
-        run: terraform validate
+      - name: Get Plan Output
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.0.4
+        id: plan-output
+        with:
+          plan: ${{ steps.run.outputs.plan_id }}
 
-      - name: Setup tfctm
-        uses: shmokmt/actions-setup-tfcmt@v2
+      - name: Update PR with Plan comment
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Cloud Plan Output')
+            })
+            const output = `#### Terraform Cloud Plan Output
+            \`\`\`
+            Plan: ${{ steps.plan-output.outputs.add }} to add, ${{ steps.plan-output.outputs.change }} to change, ${{ steps.plan-output.outputs.destroy }} to destroy.
+            \`\`\`
+            [Terraform Cloud Plan](${{ steps.run.outputs.run_link }})
+            `
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
 
-      - name: Terraform Plan
-        run: tfcmt plan -patch -- terraform plan -input=false
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_AWS_READONLY_ACCESSKEY }}
-          TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_AWS_READONLY_SECRETKEY }}
+        ## Check Run Status, if not planned_and_finished fail the job
+      - id: terraform-cloud-check-run-status
+        if: ${{ steps.run.outputs.run_status != 'planned_and_finished'}}
+        run: |
+          echo "Terraform Cloud Run Failed or Requires Further Attention"
+          echo "Run Status: '${{ steps.run.outputs.run_status }}'"
+          echo "${{ steps.run.outputs.run_link }}"
+          exit 1

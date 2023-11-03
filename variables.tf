@@ -8,6 +8,16 @@ variable "repository" {
   default = "soat-tech-challenge/terraform-aws-rds"
 }
 
+variable "AWS_ACCESS_KEY" {
+  description = "AWS Access Key"
+  type        = string
+}
+
+variable "AWS_SECRET_KEY" {
+  description = "AWS Secret Key"
+  type        = string
+}
+
 variable "db_port" {
   description = "Porta da instância RDS"
   type        = string
@@ -30,16 +40,6 @@ variable "aws_region" {
   description = "Região AWS onde criar a instância RDS"
   type        = string
   default     = "us-east-2"
-}
-
-variable "AWS_ACCESS_KEY" {
-  description = "AWS Access Key"
-  type        = string
-}
-
-variable "AWS_SECRET_KEY" {
-  description = "AWS Secret Key"
-  type        = string
 }
 
 variable "vpc_name" {

@@ -1,6 +1,14 @@
 terraform {
   required_version = ">= 0.12.26"
 
+  cloud {
+    organization = "soat-tech-challenge"
+
+    workspaces {
+      name = "staging"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
