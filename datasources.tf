@@ -4,3 +4,10 @@ data "aws_vpc" "vpc" {
     values = [var.vpc_name]
   }
 }
+
+data "aws_subnets" "private_subnets" {
+  filter {
+    name   = "tag:Name"
+    values = ["soat-tech-challenge-subnet-private*"]
+  }
+}

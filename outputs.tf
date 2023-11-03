@@ -1,4 +1,4 @@
-output "db_instance_username" {
-  description = "The RDS instance ID"
-  value       = aws_db_instance.soat_rds_postgres_db.username
+output "rds_instance_id" {
+  description = "The RDS instance identifier"
+  value       = aws_db_instance.soat_tc_rds_db.identifier
 }

@@ -1,5 +1,5 @@
-resource "aws_security_group" "soat_rds_security_group" {
-  name   = "soat-rds-security-group"
+resource "aws_security_group" "soat_tc_rds_sg" {
+  name   = "soat-tc-rds-sg"
   vpc_id = data.aws_vpc.vpc.id
 
   ingress {
@@ -10,13 +10,13 @@ resource "aws_security_group" "soat_rds_security_group" {
   }
 }
 
-resource "aws_db_subnet_group" "soat_rds_subnet_group" {
-  name       = "soat-rds-subnet-group"
-  subnet_ids = var.subnet_ids
+resource "aws_db_subnet_group" "soat_tc_rds_subnet_group" {
+  name       = "soat-tc-rds-subnet-group"
+  subnet_ids = data.aws_subnets.private_subnets.ids
 }
 
-resource "aws_db_parameter_group" "soat_rds_parameter_group" {
-  name   = "soat-rds-parameter-group"
+resource "aws_db_parameter_group" "soat_tc_rds_parameter_group" {
+  name   = "soat-tc-rds-parameter-group"
   family = "postgres15"
 
   parameter {
@@ -25,8 +25,8 @@ resource "aws_db_parameter_group" "soat_rds_parameter_group" {
   }
 }
 
-resource "aws_db_instance" "soat_rds_postgres_db" {
-  identifier = "soat-rds-postgres-db"
+resource "aws_db_instance" "soat_tc_rds_db" {
+  identifier = "soat-tc-rds-db"
   engine     = "postgres"
 
   allocated_storage = 20
@@ -42,8 +42,8 @@ resource "aws_db_instance" "soat_rds_postgres_db" {
   publicly_accessible = false
   deletion_protection = false
 
-  parameter_group_name = aws_db_parameter_group.soat_rds_parameter_group.name
-  db_subnet_group_name = aws_db_subnet_group.soat_rds_subnet_group.name
+  parameter_group_name = aws_db_parameter_group.soat_tc_rds_parameter_group.name
+  db_subnet_group_name = aws_db_subnet_group.soat_tc_rds_subnet_group.name
 
-  vpc_security_group_ids = [aws_security_group.soat_rds_security_group.id]
+  vpc_security_group_ids = [aws_security_group.soat_tc_rds_sg.id]
 }
