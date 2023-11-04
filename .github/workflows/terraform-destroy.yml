@@ -5,6 +5,5 @@ on:
 
 jobs:
   terraform_destroy:
-    if: github.ref == 'refs/heads/main'
     uses: soat-tech-challenge/github-workflows/.github/workflows/terraform-destroy.yml@main
     secrets: inherit
