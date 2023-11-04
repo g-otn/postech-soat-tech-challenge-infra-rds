@@ -8,12 +8,12 @@ variable "repository" {
   default = "soat-tech-challenge/terraform-aws-rds"
 }
 
-variable "AWS_ACCESS_KEY" {
+variable "aws_access_key" {
   description = "AWS Access Key"
   type        = string
 }
 
-variable "AWS_SECRET_KEY" {
+variable "aws_secret_key" {
   description = "AWS Secret Key"
   type        = string
 }

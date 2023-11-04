@@ -1,0 +1,14 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform_apply:
+    name: Terraform Apply
+    uses: soat-tech-challenge/github-workflows/.github/workflows/terraform-apply.yml@main
+    secrets: inherit
+    with:
+      cloud_workspace: database-staging
