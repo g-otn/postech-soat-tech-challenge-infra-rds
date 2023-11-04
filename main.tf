@@ -42,6 +42,7 @@ resource "aws_db_instance" "soat_tc_rds_db" {
   publicly_accessible = true # TODO: set to false after testing
   deletion_protection = false
   ca_cert_identifier  = "rds-ca-rsa2048-g1"
+  apply_immediately   = true
 
   parameter_group_name = aws_db_parameter_group.soat_tc_rds_parameter_group.name
   db_subnet_group_name = aws_db_subnet_group.soat_tc_rds_subnet_group.name
