@@ -1,21 +1,6 @@
-resource "aws_security_group" "soat_tc_rds_sg" {
-  name   = "soat-tc-rds-sg"
-  vpc_id = data.aws_vpc.vpc.id
 
-  ingress {
-    from_port   = var.db_port
-    to_port     = var.db_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
 
-resource "aws_db_subnet_group" "soat_tc_rds_subnet_group" {
-  name       = "soat-tc-rds-subnet-group"
-  subnet_ids = data.aws_subnets.private_subnets.ids
-}
-
-resource "aws_db_parameter_group" "soat_tc_rds_parameter_group" {
+resource "aws_db_parameter_group" "this" {
   name   = "soat-tc-rds-parameter-group"
   family = "postgres15"
 
@@ -25,9 +10,11 @@ resource "aws_db_parameter_group" "soat_tc_rds_parameter_group" {
   }
 }
 
-resource "aws_db_instance" "soat_tc_rds_db" {
+resource "aws_db_instance" "this" {
   identifier = "soat-tc-rds-db"
   engine     = "postgres"
+
+  db_name = "backend-db"
 
   allocated_storage = 20
   storage_type      = "gp2"
@@ -44,8 +31,8 @@ resource "aws_db_instance" "soat_tc_rds_db" {
   ca_cert_identifier  = "rds-ca-rsa2048-g1"
   apply_immediately   = true
 
-  parameter_group_name = aws_db_parameter_group.soat_tc_rds_parameter_group.name
-  db_subnet_group_name = aws_db_subnet_group.soat_tc_rds_subnet_group.name
+  parameter_group_name = aws_db_parameter_group.this.name
+  db_subnet_group_name = aws_db_subnet_group.this.name
 
-  vpc_security_group_ids = [aws_security_group.soat_tc_rds_sg.id]
+  vpc_security_group_ids = [aws_security_group.this.id]
 }

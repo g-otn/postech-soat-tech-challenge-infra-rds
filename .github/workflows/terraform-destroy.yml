@@ -5,31 +5,5 @@ on:
 
 jobs:
   terraform_destroy:
-    name: Terraform Destroy
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: AWS
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -destroy -input=false
-        env:
-          TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_AWS_READONLY_ACCESSKEY }}
-          TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_AWS_READONLY_SECRETKEY }}
-
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve -input=false
-        env:
-          TF_VAR_AWS_ACCESS_KEY: ${{ secrets.TF_VAR_AWS_ACCESS_KEY }}
-          TF_VAR_AWS_SECRET_KEY: ${{ secrets.TF_VAR_AWS_SECRET_KEY }}
+    uses: soat-tech-challenge/github-workflows/.github/workflows/terraform-destroy.yml@main
+    secrets: inherit

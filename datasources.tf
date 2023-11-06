@@ -11,3 +11,9 @@ data "aws_subnets" "private_subnets" {
     values = ["soat-tech-challenge-subnet-public*"]
   }
 }
+
+
+# data "tfe_outputs" "network" {
+#   organization = "soat-tech-challenge"
+#   workspace    = "network-staging"
+# }
