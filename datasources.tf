@@ -8,12 +8,6 @@ data "aws_vpc" "vpc" {
 data "aws_subnets" "private_subnets" {
   filter {
     name   = "tag:Name"
-    values = ["soat-tech-challenge-subnet-public*"]
+    values = ["soat-tech-challenge-subnet*"]
   }
 }
-
-
-# data "tfe_outputs" "network" {
-#   organization = "soat-tech-challenge"
-#   workspace    = "network-staging"
-# }
