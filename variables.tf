@@ -1,11 +1,7 @@
-variable "repo_owner" {
-  type    = string
-  default = "soat-tech-challenge"
-}
-
-variable "repository" {
-  type    = string
-  default = "soat-tech-challenge/terraform-aws-rds"
+variable "aws_region" {
+  description = "AWS Region to create resources on"
+  type        = string
+  default     = "us-east-2"
 }
 
 variable "aws_access_key" {
@@ -18,28 +14,26 @@ variable "aws_secret_key" {
   type        = string
 }
 
-variable "db_port" {
-  description = "Porta da instância RDS"
-  type        = string
-  default     = "5432"
-}
-
 variable "db_username" {
-  description = "Nome de usuário do banco de dados"
+  description = "Database username"
   type        = string
-  default     = "postgres"
 }
 
 variable "db_password" {
-  description = "Senha do banco de dados"
+  description = "Database password"
   type        = string
-  default     = "postgres"
 }
 
-variable "aws_region" {
-  description = "Região AWS onde criar a instância RDS"
+variable "db_name" {
+  description = "Database name"
   type        = string
-  default     = "us-east-2"
+  default     = "backend_db"
+}
+
+variable "db_port" {
+  description = "Database port"
+  type        = number
+  default     = 5432
 }
 
 variable "vpc_name" {
