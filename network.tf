@@ -8,6 +8,10 @@ resource "aws_security_group" "this" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "Backend DB Security Group",
+  }
 }
 
 resource "aws_db_subnet_group" "this" {
