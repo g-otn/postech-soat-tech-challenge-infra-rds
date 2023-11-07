@@ -6,8 +6,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Organization = var.repo_owner
-      Repository   = var.repository
+      Organization = "soat-tech-challenge"
+      Workspace    = "database-staging"
     }
   }
 }

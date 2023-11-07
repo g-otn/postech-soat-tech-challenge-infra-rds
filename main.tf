@@ -14,7 +14,7 @@ resource "aws_db_instance" "this" {
   identifier = "soat-tc-rds-db"
   engine     = "postgres"
 
-  db_name = "backend"
+  db_name = var.db_name
 
   allocated_storage = 20
   storage_type      = "gp2"
