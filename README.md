@@ -1,4 +1,5 @@
 # terraform-aws-rds
+[![Terraform Apply](https://github.com/soat-tech-challenge/terraform-database/actions/workflows/main.yml/badge.svg)](https://github.com/soat-tech-challenge/terraform-database/actions/workflows/main.yml)
 
 Manages AWS RDS-related Terraform resources.
 
