@@ -21,8 +21,8 @@ resource "aws_db_instance" "order_svc_db" {
 
   allocated_storage = 20
   storage_type      = "gp2"
-  engine_version    = "15.4"
-  instance_class    = "db.t3.micro"
+  engine_version    = "15.5"
+  instance_class    = "db.t4g.micro"
 
   username = var.order_svc_db_username
   password = var.order_svc_db_password
@@ -51,8 +51,8 @@ resource "aws_db_instance" "payment_svc_db" {
 
   allocated_storage = 20
   storage_type      = "gp2"
-  engine_version    = "15.4"
-  instance_class    = "db.t3.micro"
+  engine_version    = "15.5"
+  instance_class    = "db.t4g.micro"
 
   username = var.payment_svc_db_username
   password = var.payment_svc_db_password
