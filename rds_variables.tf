@@ -12,7 +12,7 @@ variable "order_svc_db_password" {
 variable "order_svc_db_name" {
   description = "Order Service RDS Database instance name"
   type        = string
-  default     = "postgres"
+  default     = "order_db"
 }
 
 variable "order_svc_db_port" {
@@ -37,7 +37,7 @@ variable "payment_svc_db_password" {
 variable "payment_svc_db_name" {
   description = "Payment Service RDS Database instance name"
   type        = string
-  default     = "postgres"
+  default     = "payment_db"
 }
 
 variable "payment_svc_db_port" {
